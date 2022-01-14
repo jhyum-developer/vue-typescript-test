@@ -18,9 +18,9 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: "/chart",
-        name: "Chart",
+        name: "ChartView",
         component: () =>
-            import("../views/chart/ComChart.vue")
+            import("../views/chart/ChartView.vue")
     }
 ];
 
