@@ -8,25 +8,18 @@
 
 import * as types from './types';
 import Chart from 'chart.js/auto';
-import * as pattern from 'patternomaly';
 // import {Chart, registerables} from 'chart.js';
 // Chart.register(...registerables);
 
 
 import {defineComponent, onMounted, watch, ref, reactive, readonly} from 'vue';
-import {color} from 'chart.js/helpers';
 import {
     ChartData,
     ChartOptions,
-    ChartType,
-    ChartTypeRegistry,
-    DatasetController,
-    ScriptableContext,
-    TooltipItem
+    ScriptableContext
 } from 'chart.js';
-import {Model} from '@/views/chart/types';
 
-export default defineComponent({
+const component = defineComponent({
     name: 'com-chart',
 
     props: {
@@ -146,6 +139,8 @@ export default defineComponent({
 
     }
 });
+
+export default component;
 </script>
 
 <style scoped>
