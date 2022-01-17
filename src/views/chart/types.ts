@@ -1,3 +1,4 @@
+import {ChartOptions, ChartType, ScriptableContext} from 'chart.js';
 
 export interface Size {
     height: number;
@@ -6,31 +7,49 @@ export interface Size {
 
 export type Type = 'line' | 'bar';
 
-export type ColorType = 'backgroundColor' | 'borderColor';
-
-
-export const basicColors:Array<string> = [
-    'rgba(255, 99, 132, 0.2)',
-    'rgba(54, 162, 235, 0.2)',
-    'rgba(255, 206, 86, 0.2)',
-    'rgba(75, 192, 192, 0.2)',
-    'rgba(153, 102, 255, 0.2)',
-    'rgba(255, 159, 64, 0.2)'
-];
-export const basicBorders:Array<string> = [
-    'rgba(255, 99, 132, 1)',
-    'rgba(54, 162, 235, 1)',
-    'rgba(255, 206, 86, 1)',
-    'rgba(75, 192, 192, 1)',
-    'rgba(153, 102, 255, 1)',
-    'rgba(255, 159, 64, 1)'
-];
-
-
-export declare class Model {
-    Type: Type;
-    ColorType: ColorType;
-    Size: Size;
+export type Dataset = {
+    label: string;
+    value: Array<number>;
+    backgroundColor: ((context:ScriptableContext<ChartType>) => string) | string | Array<string>;
+    borderColor: ((context:ScriptableContext<ChartType>) => string) | string | Array<string>;
 }
+
+export class CustomOptions {
+    dataLabel: string;
+    labelKey: string;
+    valueKey: string;
+    min: number | null;
+    max: number | null;
+
+    borderWidth: number;
+    constructor() {
+        this.dataLabel = 'dataset 1';
+        this.labelKey = '';
+        this.valueKey = '';
+        this.min = null;
+        this.max = null;
+        this.borderWidth = 1;
+    }
+}
+
+export const minMaxFun = function(axis:string, customOptions: CustomOptions, options: ChartOptions):void {
+    const min = customOptions?.min;
+    const max = customOptions?.max;
+
+    options.scales = options.scales || {};
+    if(axis === 'x') {
+        options.scales.x = options.scales.x || {};
+
+        if(min !== null) options.scales.x.min = +min;
+        if(max !== null) options.scales.x.max = +max;
+    }
+
+    options.scales.y = options.scales.y || {};
+
+    if(min !== null) options.scales.y.min = +min;
+    if(max !== null) options.scales.y.max = +max;
+
+};
+
 
 

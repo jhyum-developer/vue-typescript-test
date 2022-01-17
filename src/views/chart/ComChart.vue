@@ -1,6 +1,6 @@
 <template>
     <div>
-        <canvas id='myChart' :width='canvasSize.width' :height='canvasSize.height'></canvas>
+        <canvas id='myChart'></canvas>
     </div>
 </template>
 
@@ -61,17 +61,6 @@ const component = defineComponent({
             width: props.width
         });
 
-        /* backgroundColor/borderColor */
-        const colorFun = function(type: types.ColorType) {
-            const colors = type === 'backgroundColor'? types.basicColors: types.basicBorders;
-
-            return function(context: ScriptableContext<'bar'>): string {
-                const dataIndex = context.dataIndex;
-                const index = dataIndex % colors.length;
-                return colors[index];
-            }
-        };
-
         /* chart data 설정*/
         const data: ChartData<types.Type, number[], string> = {
                 labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
@@ -80,8 +69,6 @@ const component = defineComponent({
                         type: 'bar',
                         label: '# of Votes',
                         data: [12, 19, 3, 5, 2, 3],
-                        backgroundColor: colorFun('backgroundColor'),
-                        borderColor: colorFun('borderColor'),
                         borderWidth: 1,
                         indexAxis: 'y',
                     },
