@@ -15,6 +15,11 @@ const Component = defineComponent({
     name: "bar-chart",
 
     props: {
+        items: {
+            type: Array,
+            default: () => []
+        },
+
         data: {
             type: Array,
             default: () => new Array<Dataset>()

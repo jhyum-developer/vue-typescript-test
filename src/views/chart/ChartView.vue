@@ -1,11 +1,20 @@
 <template>
     <div>
         <h1>Chart Test By Typescript</h1>
-        <button @click="changeData">data button</button>
-        <button @click="changeLabel">label button</button>
-        <button @click="update">update button</button>
-        <com-chart v-if='false' :data='data' :label='label'></com-chart>
-        <bar-chart ref='bar-chart'
+        <button @click='changeData'>data button</button>
+        <button @click='changeLabel'>label button</button>
+        <button @click='update'>update button</button>
+        <button @click='resetZoom'>Reset Zoom</button>
+        <button @click='zoom'>Reset +</button>
+        <com-chart ref='com-chart'
+                   class='sizeClass'
+                   :items='items'
+                   :x-labels='xLabels'
+                   :value-keys='valueKeys'
+                   chart-type='bar'
+                   :options='options'>
+        </com-chart>
+        <bar-chart v-if='false' ref='bar-chart'
                    class='sizeClass'
                    type='stacked'
                    :data='data'
@@ -19,7 +28,8 @@
 import {defineComponent} from 'vue';
 import ComChart from './ComChart.vue';
 import BarChart from './BarChart.vue';
-import {CustomOptions, Dataset} from './types';
+import {DefineComponent} from '@vue/runtime-core';
+import {ScriptableContext} from 'chart.js';
 
 export default defineComponent({
     name: 'chart-view',
@@ -35,88 +45,91 @@ export default defineComponent({
             console.log('Change label');
         }
 
-        const items = [{key:20, key2:29},
-            {key:20, key2:29},
-            {key:20, key2:29},
-            {key:20, key2:29}]
-
-        const value =items.map(item=> item.key)
-
-        const data: Array<Dataset> = [
-            {
-                label: 'chart test 1',
-                value: [10, 30, 5, 11, 17, 23],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)'
-                ]
-            },
-            {
-                label: 'chart test 2',
-                value: [-5, 10, 3, 2, 7, 9],
-                backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(54, 162, 235, 1)'
-                ]
-            }
+        const items = [
+            {key: 5, key2: 29, key3: 10},
+            {key: 10, key2: 9, key3: 8},
+            {key: 3, key2: 6, key3: 4},
+            {key: 17, key2: 5, key3: 11},
+            {key: 7, key2: 14, key3: 23}
         ];
 
-        const options = new CustomOptions();
-        options.valueKey = 'value';
-        options.labelKey = 'label';
-        // options.backgroundColor = function(context) {
-        //     const dataIndex = context.dataIndex;
-        //     const index = dataIndex % 6;
-        //     const colors = [
-        //         'rgba(255, 99, 132, 0.2)',
-        //         'rgba(54, 162, 235, 0.2)',
-        //         'rgba(255, 206, 86, 0.2)',
-        //         'rgba(75, 192, 192, 0.2)',
-        //         'rgba(153, 102, 255, 0.2)',
-        //         'rgba(255, 159, 64, 0.2)'
-        //     ];
-        //
-        //     return colors[index];
-        // };
+        const xLabels = ['x label 1', 'x label 2', 'x label 3', 'x label 4', 'x label 5', 'x label 6', 'x label 7'];
 
-        // options.borderColor = function(context) {
-        //     const dataIndex = context.dataIndex;
-        //     const index = dataIndex % 6;
-        //     const colors = [
-        //         'rgba(255, 99, 132, 1)',
-        //         'rgba(54, 162, 235, 1)',
-        //         'rgba(255, 206, 86, 1)',
-        //         'rgba(75, 192, 192, 1)',
-        //         'rgba(153, 102, 255, 1)',
-        //         'rgba(255, 159, 64, 1)'
-        //     ];
-        //
-        //     return colors[index];
-        // };
+        const valueKeys = ['key', 'key2', 'key3'];
 
+        const options = {
+            scales: {
+                x: {
+                    stacked: true
+                },
+                y: {
+                    stacked: true
+                }
+            },
+            backgroundColor: function(context: ScriptableContext<any>) {
+                const dataIndex = context.dataIndex;
+                const index = dataIndex % 6;
+                const colors = [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ];
+
+                return colors[context.datasetIndex];
+                // return colors[index];
+            },
+            borderColor: function(context: ScriptableContext<any>) {
+                const dataIndex = context.dataIndex;
+                const index = dataIndex % 6;
+                const colors = [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ];
+
+                return colors[context.datasetIndex];
+                // return colors[index];
+            },
+            borderWidth: 1
+        };
 
         return {
             changeData,
             changeLabel,
-            data,
-            options
+            options,
+            items,
+            xLabels,
+            valueKeys
         };
     },
     methods: {
         update() {
-            this.$refs['bar-chart'].update();
+            const component = this.$refs['com-chart'] as DefineComponent;
+            component.update();
+        },
+
+        resetZoom() {
+            const component = this.$refs['com-chart'] as DefineComponent;
+            component.resetZoom();
+        },
+
+        zoom() {
+            const component = this.$refs['com-chart'] as DefineComponent;
+            component.chart.zoom(0.9);
         }
     }
 });
 </script>
 
 <style scoped>
-    .sizeClass {
-        width: 1800px;
-        height: 600px;
-    }
+.sizeClass {
+    width: 1800px;
+    height: 600px;
+}
 </style>

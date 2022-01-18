@@ -1,130 +1,160 @@
 <template>
-    <div>
-        <canvas id='myChart'></canvas>
+    <div id='bar-container'>
+        <canvas id='chart'></canvas>
     </div>
 </template>
 
 <script lang='ts'>
 
-import * as types from './types';
-import Chart from 'chart.js/auto';
+
 // import {Chart, registerables} from 'chart.js';
 // Chart.register(...registerables);
 
 
-import {defineComponent, onMounted, watch, ref, reactive, readonly} from 'vue';
+import Chart from 'chart.js/auto';
+import {defineComponent, onMounted, reactive} from 'vue';
 import {
     ChartData,
-    ChartOptions,
-    ScriptableContext
+    ChartOptions, ChartType,
 } from 'chart.js';
+import {isArray} from 'chart.js/helpers';
+import zoomPlugin from 'chartjs-plugin-zoom';
+Chart.register(zoomPlugin);
 
 const component = defineComponent({
     name: 'com-chart',
 
     props: {
-        data: {
+        xLabels: {
             type: Array,
             default: () => []
         },
 
-        xLabel: {
+        yLabels: {
+            type: Array,
+            default: () => []
+        },
+
+        labelKeys: {
+            type: Array,
+            default: () => []
+        },
+
+        valueKeys: {
+            type: Array,
+            default: () => []
+        },
+
+        items: {
+            type: Array,
+            default: () => []
+        },
+
+        chartType: {
             type: String,
-            default: 'xLabel'
+            default: 'bar'
         },
 
-        yLabel: {
-            type: String,
-            default: 'yLabel'
-        },
-
-        label: {
-            type: String,
-            default: 'label'
-        },
-
-        width: {
-            type: Number,
-            default: 500
-        },
-
-        height: {
-            type: Number,
-            default: 300
+        options: {
+            type: Object,
+            default: () => {return {}}
         }
     },
 
     setup(props, context) {
-        /* canvas Size */
-        const canvasSize: types.Size = reactive({
-            height: props.height,
-            width: props.width
-        });
-
-        /* chart data 설정*/
-        const data: ChartData<types.Type, number[], string> = {
-                labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-                datasets: [
-                    {
-                        type: 'bar',
-                        label: '# of Votes',
-                        data: [12, 19, 3, 5, 2, 3],
-                        borderWidth: 1,
-                        indexAxis: 'y',
-                    },
-                    {
-                        type: 'line',
-                        label: '# of Votes',
-                        data: [5, 9, 17, 2, 10, 6],
-                        borderColor: 'rgb(13,13,238)',
-                        borderWidth: 1,
-                        indexAxis: 'y',
-                    }
-                ]
-            }
-        /* chart options 설정*/
-        const options:ChartOptions<types.Type> = {
-            indexAxis: 'y',
-            scales: {
-                x: {
-                    beginAtZero: true
-                }
-            }
+        /* data 가공 */
+        const data: ChartData<ChartType, number[], string> = {labels: [], datasets: []};
+        if (props.items.length > 0 && isArray<number>(props.items[0])) {
+            data.datasets = [{data: props.items as number[]}];
         }
+        else if(props.items.length > 0) {
+            const items: number[][] = [];
+            props.valueKeys.forEach((key, keyIndex) => {
+                items[keyIndex] = props.items.map(item => {
+                    const target = item as Record<string, number>;
+                    const field = key as string
+                    return target[field];
+                });
+            });
 
-
-        /* chart 생성 */
-        if(props.data.length > 0) {
-            let myChart: Chart<types.Type, number[], string>;
-            onMounted(() => {
-                if(!myChart) {
-                    const canvas = document.getElementById('myChart') as HTMLCanvasElement;
-                    const ctx = canvas.getContext('2d');
-                    if (ctx === null) return;
-                    myChart = new Chart(canvas, {
-                        type: 'bar',
-                        data,
-                        options
-                    });
+            data.datasets = items.map((item, index) => {
+                return {
+                    label: (props.labelKeys[index] || `dataset ${index}`) as string,
+                    data: item
                 }
             });
 
-            /* chart data update */
-            watch(
-                () => [props.data, props.label],
-                data => {
-                    myChart.data.datasets[0].data = [1, 2, 3, 4, 5, 6];
-                    myChart.update();
-                }
-            );
+            data.labels = props.xLabels as string[];
         }
-
-
-        return {
-            canvasSize
+        const plugin = {
+            plugins: {
+                zoom: {
+                    drag: {
+                        enabled: true
+                    },
+                    wheel: {
+                        enabled: true
+                    },
+                    pinch: {
+                        enabled: true
+                    },
+                    mode: 'xy'
+                }
+            }
         };
 
+        /* options 추가 */
+        const options: ChartOptions<ChartType> = {maintainAspectRatio: false, responsive: true, ...props.options};
+        options.plugins = {
+            ...options.plugins,
+            zoom: {
+                zoom: {
+                    drag: {
+                        enabled: true
+                    },
+                    wheel: {
+                        enabled: true
+                    },
+                    pinch: {
+                        enabled: true
+                    },
+                    mode: 'xy'
+                }
+            }
+        }
+
+        /* config */
+        const config = {
+            type: props.chartType as ChartType,
+            data,
+            options
+        };
+
+        /* chart 생성 */
+        const canvas = document.createElement('canvas');
+        let chart: Chart<ChartType, unknown[], string> = new Chart(canvas, {type: 'bar', data});
+        onMounted(() => {
+            const canvas = document.getElementById('chart') as HTMLCanvasElement;
+            if (canvas === null) return;
+            const ctx = canvas.getContext('2d');
+            if (ctx === null) return;
+            chart = new Chart(canvas, config);
+        });
+
+        return {
+            chart
+        };
+    },
+
+    methods: {
+        update() {
+            this.chart.update();
+        },
+        resetZoom() {
+            this.chart.resetZoom();
+        }
     }
+
 });
 
 export default component;
