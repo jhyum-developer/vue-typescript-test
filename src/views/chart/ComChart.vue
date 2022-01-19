@@ -108,10 +108,12 @@ const component = defineComponent({
         options.plugins = {
             ...options.plugins,
             zoom: {
+                pan: {
+                    enabled: true,
+                    mode: 'xy',
+                    threshold: 5,
+                },
                 zoom: {
-                    drag: {
-                        enabled: true
-                    },
                     wheel: {
                         enabled: true
                     },
@@ -135,13 +137,17 @@ const component = defineComponent({
         let chart: Chart<ChartType, unknown[], string> = new Chart(canvas, {type: 'bar', data});
         onMounted(() => {
             const canvas = document.getElementById('chart') as HTMLCanvasElement;
-            if (canvas === null) return;
             const ctx = canvas.getContext('2d');
             if (ctx === null) return;
             chart = new Chart(canvas, config);
         });
 
+        const reset = () => {
+            chart.resetZoom();
+        };
+
         return {
+            reset,
             chart
         };
     },
@@ -151,7 +157,7 @@ const component = defineComponent({
             this.chart.update();
         },
         resetZoom() {
-            this.chart.resetZoom();
+            this.reset();
         }
     }
 
