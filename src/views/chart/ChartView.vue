@@ -8,18 +8,12 @@
         <button @click='zoom'>Reset +</button>
         <com-chart ref='com-chart'
                    class='sizeClass'
-                   :items='items'
-                   :x-labels='xLabels'
-                   :value-keys='valueKeys'
+                   :data='data'
+                   :labels='xLabels'
+                   :label-keys='["test 1", "test 2", "test 3"]'
                    chart-type='bar'
                    :options='options'>
         </com-chart>
-        <bar-chart v-if='false' ref='bar-chart'
-                   class='sizeClass'
-                   type='stacked'
-                   :data='data'
-                   :custom-options='options'>
-        </bar-chart>
     </div>
 
 </template>
@@ -27,14 +21,14 @@
 <script lang='ts'>
 import {defineComponent} from 'vue';
 import ComChart from './ComChart.vue';
-import BarChart from './BarChart.vue';
 import {DefineComponent} from '@vue/runtime-core';
 import {ScriptableContext} from 'chart.js';
+import {Dataset} from '@/views/chart/utils';
 
 export default defineComponent({
     name: 'chart-view',
 
-    components: {BarChart, ComChart},
+    components: {ComChart},
 
     setup(props, context) {
         function changeData() {
@@ -52,10 +46,23 @@ export default defineComponent({
             {key: 17, key2: 5, key3: 11},
             {key: 7, key2: 14, key3: 23}
         ];
+        const nItems = [
+            [1,2,3,4,5,6,7],
+            [11,6,3,14,5,8,2],
+            [8,2,23,4,15,6,14]
+        ]
 
         const xLabels = ['x label 1', 'x label 2', 'x label 3', 'x label 4', 'x label 5', 'x label 6', 'x label 7'];
 
         const valueKeys = ['key', 'key2', 'key3'];
+        const pointKeys = [
+            {x:'key3',y:'key'},
+            {x:'key',y:'key2'},
+            {x:'key2',y:'key3'}
+
+        ]
+
+        const data = new Dataset(pointKeys, items);
 
         const options = {
             scales: {
@@ -105,7 +112,8 @@ export default defineComponent({
             options,
             items,
             xLabels,
-            valueKeys
+            valueKeys,
+            data
         };
     },
     methods: {

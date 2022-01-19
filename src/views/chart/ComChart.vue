@@ -5,48 +5,32 @@
 </template>
 
 <script lang='ts'>
-
-
-// import {Chart, registerables} from 'chart.js';
-// Chart.register(...registerables);
-
-
-import Chart from 'chart.js/auto';
+// import Chart from 'chart.js/auto';
+import {Chart, registerables, ChartData, ChartOptions, ChartType} from 'chart.js';
 import {defineComponent, onMounted, reactive} from 'vue';
-import {
-    ChartData,
-    ChartOptions, ChartType,
-} from 'chart.js';
 import {isArray} from 'chart.js/helpers';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import {Mode} from 'chartjs-plugin-zoom/types/options';
-Chart.register(zoomPlugin);
+import * as utils from '@/views/chart/utils';
+import {Dataset} from '@/views/chart/utils';
+
+Chart.register(...registerables, zoomPlugin);
 
 const component = defineComponent({
     name: 'com-chart',
 
     props: {
-        xLabels: {
+        labels: {
             type: Array,
-            default: () => []
+            default: () => ['label1', 'label2', 'label3', 'label4', 'label5', 'label6', 'label7']
         },
 
-        yLabels: {
-            type: Array,
-            default: () => []
+        data: {
+            type: Dataset,
+            default: () => new Dataset()
         },
 
         labelKeys: {
-            type: Array,
-            default: () => []
-        },
-
-        valueKeys: {
-            type: Array,
-            default: () => []
-        },
-
-        items: {
             type: Array,
             default: () => []
         },
@@ -66,30 +50,17 @@ const component = defineComponent({
 
     setup(props, context) {
         /* data 가공 */
-        const data: ChartData<ChartType, number[], string> = {labels: [], datasets: []};
-        if (props.items.length > 0 && isArray<number>(props.items[0])) {
-            data.datasets = [{data: props.items as number[]}];
-        }
-        else if(props.items.length > 0) {
-            const items: number[][] = [];
-            props.valueKeys.forEach((key, keyIndex) => {
-                items[keyIndex] = props.items.map(item => {
-                    const target = item as Record<string, number>;
-                    const field = key as string
-                    return target[field];
-                });
-            });
+        const data: ChartData<ChartType, (number| utils.Point)[], string> = {labels: [], datasets: []};
+        const items: Array<(number | utils.Point)[]> = props.data.getItems();
 
-            data.datasets = items.map((item, index) => {
-                return {
-                    label: (props.labelKeys[index] || `dataset ${index}`) as string,
-                    data: item
-                }
-            });
+        data.datasets = items.map((item, index) => {
+            return {
+                label: (props.labelKeys[index] || `dataset ${index}`) as string,
+                data: item
+            };
+        });
 
-            data.labels = props.xLabels as string[];
-        }
-
+        data.labels = props.labels as string[];
         /* options 추가 */
         const initOptions = {
             maintainAspectRatio: false,
