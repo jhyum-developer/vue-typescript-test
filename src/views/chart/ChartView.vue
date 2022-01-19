@@ -21,7 +21,7 @@
                         :line-data='data'
                         :bar-data='data'
                         :labels='xLabels'
-                        :label-keys='["test 1", "test 2", "test 3"]'
+                        :label-keys='["test 1", "test 2", "test 3", "test 4", "test 5", "test 6"]'
                         :options='options'>
         </line-bar-chart>
     </div>
@@ -72,7 +72,7 @@ export default defineComponent({
             {x:'key2',y:'key3'}
         ]
 
-        const data = new Dataset(valueKeys, items);
+        const data = new Dataset(pointKeys, items);
 
         const options = {
             scales: {

@@ -5,9 +5,23 @@
         <router-link to="/about">About</router-link>
         |
         <router-link to="/chart">Chart Test</router-link>
+        |
+        <router-link to="/breadcrumb">Breadcrumb</router-link>
+        |
+        <button @click='routerClick'>router</button>
     </div>
     <router-view/>
 </template>
+
+<script lang='ts'>
+export default {
+    methods: {
+        routerClick() {
+            console.log(this.$router)
+        }
+    }
+}
+</script>
 
 <style>
 #app {

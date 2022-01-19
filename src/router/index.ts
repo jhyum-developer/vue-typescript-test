@@ -1,6 +1,23 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
-
+const pathList = [
+    {
+        path: "/",
+        name: "Home",
+    },
+    {
+        path: "/about",
+        name: "About"
+    },
+    {
+        path: "/chart",
+        name: "ChartView"
+    },
+    {
+        path: "/breadcrumb",
+        name: "Breadcrumb"
+    }
+] as Array<RouteRecordRaw>
 const routes: Array<RouteRecordRaw> = [
     {
         path: "/",
@@ -21,12 +38,18 @@ const routes: Array<RouteRecordRaw> = [
         name: "ChartView",
         component: () =>
             import("../views/chart/ChartView.vue")
+    },
+    {
+        path: "/breadcrumb",
+        name: "breadcrumb",
+        component: () =>
+            import("../views/breadcrumb/Breadcrumb.vue")
     }
 ];
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
-    routes,
+    routes: routes,
 });
 
 export default router;
