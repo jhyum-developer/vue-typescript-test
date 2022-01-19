@@ -119,15 +119,20 @@ const component = defineComponent({
             chart.resetZoom();
         };
 
+        const chartUpdate = () => {
+            chart.update();
+        };
+
         return {
             reset,
+            chartUpdate,
             chart
         };
     },
 
     methods: {
         update() {
-            this.chart.update();
+            this.chartUpdate();
         },
         resetZoom() {
             this.reset();
