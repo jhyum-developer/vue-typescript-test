@@ -7,13 +7,23 @@
         <button @click='resetZoom'>Reset Zoom</button>
         <button @click='zoom'>Reset +</button>
         <com-chart ref='com-chart'
+                   v-if='false'
                    class='sizeClass'
                    :data='data'
                    :labels='xLabels'
                    :label-keys='["test 1", "test 2", "test 3"]'
-                   chart-type='bar'
+                   chart-type='pie'
                    :options='options'>
         </com-chart>
+
+        <line-bar-chart ref='lineBarChart'
+                        class='sizeClass'
+                        :line-data='data'
+                        :bar-data='data'
+                        :labels='xLabels'
+                        :label-keys='["test 1", "test 2", "test 3"]'
+                        :options='options'>
+        </line-bar-chart>
     </div>
 
 </template>
@@ -24,11 +34,12 @@ import ComChart from './ComChart.vue';
 import {DefineComponent} from '@vue/runtime-core';
 import {ScriptableContext} from 'chart.js';
 import {Dataset} from '@/views/chart/utils';
+import LineBarChart from '@/views/chart/LineBarChart.vue';
 
 export default defineComponent({
     name: 'chart-view',
 
-    components: {ComChart},
+    components: {LineBarChart, ComChart},
 
     setup(props, context) {
         function changeData() {
@@ -59,10 +70,9 @@ export default defineComponent({
             {x:'key3',y:'key'},
             {x:'key',y:'key2'},
             {x:'key2',y:'key3'}
-
         ]
 
-        const data = new Dataset(pointKeys, items);
+        const data = new Dataset(valueKeys, items);
 
         const options = {
             scales: {
@@ -118,13 +128,17 @@ export default defineComponent({
     },
     methods: {
         update() {
-            const component = this.$refs['com-chart'] as DefineComponent;
-            component.update();
+            // const component = this.$refs['com-chart'] as DefineComponent;
+            // component.update();
+            const lineBar = this.$refs['lineBarChart'] as DefineComponent;
+            lineBar.update();
         },
 
         resetZoom() {
-            const component = this.$refs['com-chart'] as DefineComponent;
-            component.resetZoom();
+            // const component = this.$refs['com-chart'] as DefineComponent;
+            // component.resetZoom();
+            const lineBar = this.$refs['lineBarChart'] as DefineComponent;
+            lineBar.resetZoom();
         },
 
         zoom() {

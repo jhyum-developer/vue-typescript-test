@@ -6,7 +6,7 @@
 
 <script lang='ts'>
 import {Dataset} from '@/views/chart/utils';
-import {Chart, ChartData, ChartOptions, ChartType, registerables} from 'chart.js';
+import {Chart, ChartData, ChartOptions, registerables} from 'chart.js';
 import * as utils from '@/views/chart/utils';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import {Mode} from 'chartjs-plugin-zoom/types/options';
