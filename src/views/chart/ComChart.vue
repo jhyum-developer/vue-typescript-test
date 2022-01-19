@@ -19,6 +19,7 @@ import {
 } from 'chart.js';
 import {isArray} from 'chart.js/helpers';
 import zoomPlugin from 'chartjs-plugin-zoom';
+import {Mode} from 'chartjs-plugin-zoom/types/options';
 Chart.register(zoomPlugin);
 
 const component = defineComponent({
@@ -57,7 +58,9 @@ const component = defineComponent({
 
         options: {
             type: Object,
-            default: () => {return {}}
+            default: () => {
+                return {};
+            }
         }
     },
 
@@ -86,44 +89,33 @@ const component = defineComponent({
 
             data.labels = props.xLabels as string[];
         }
-        const plugin = {
+
+        /* options 추가 */
+        const initOptions = {
+            maintainAspectRatio: false,
+            responsive: true,
             plugins: {
                 zoom: {
-                    drag: {
-                        enabled: true
+                    pan: {
+                        enabled: true,
+                        mode: 'xy' as Mode
                     },
-                    wheel: {
-                        enabled: true
-                    },
-                    pinch: {
-                        enabled: true
-                    },
-                    mode: 'xy'
+                    zoom: {
+                        wheel: {
+                            enabled: true
+                        },
+                        pinch: {
+                            enabled: true
+                        },
+                        mode: 'xy' as Mode
+                    }
                 }
             }
         };
-
-        /* options 추가 */
-        const options: ChartOptions<ChartType> = {maintainAspectRatio: false, responsive: true, ...props.options};
-        options.plugins = {
-            ...options.plugins,
-            zoom: {
-                pan: {
-                    enabled: true,
-                    mode: 'xy',
-                    threshold: 5,
-                },
-                zoom: {
-                    wheel: {
-                        enabled: true
-                    },
-                    pinch: {
-                        enabled: true
-                    },
-                    mode: 'xy'
-                }
-            }
-        }
+        const options: ChartOptions<ChartType> = reactive(props.options);
+        options.maintainAspectRatio = options.maintainAspectRatio || initOptions.maintainAspectRatio;
+        options.responsive = options.responsive || initOptions.responsive;
+        options.plugins = options.plugins || initOptions.plugins;
 
         /* config */
         const config = {
