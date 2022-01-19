@@ -65,7 +65,7 @@ const component = defineComponent({
         const barDatasets = barItems.map((item, index) => {
             return {
                 type: 'bar' as 'line' | 'bar',
-                label: (props.labelKeys[index] || `bar ${index}`) as string,
+                label: (props.labelKeys[lineItems.length + index] || `bar ${index}`) as string,
                 data: item
             };
         });
