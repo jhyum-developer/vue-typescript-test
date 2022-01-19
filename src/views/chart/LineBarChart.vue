@@ -52,6 +52,7 @@ const component = defineComponent({
         const lineItems: Array<(number | utils.Point)[]> = props.lineData.getItems();
         const barItems: Array<(number | utils.Point)[]> = props.barData.getItems();
 
+        /* Line Chart data 가공 */
         const lineDatasets = lineItems.map((item, index) => {
             return {
                 type: 'line' as 'line' | 'bar',
@@ -60,6 +61,7 @@ const component = defineComponent({
             };
         });
 
+        /* Bar Chart data 가공 */
         const barDatasets = barItems.map((item, index) => {
             return {
                 type: 'bar' as 'line' | 'bar',
@@ -68,10 +70,13 @@ const component = defineComponent({
             };
         });
 
+        /* Line - Bar Chart Data Merge */
         data.datasets = [...lineDatasets, ...barDatasets];
 
+        /* x축 Labels */
         data.labels = props.labels as string[];
-        /* options 추가 */
+
+        /* init options 추가 */
         const initOptions = {
             maintainAspectRatio: false,
             responsive: true,
@@ -93,6 +98,8 @@ const component = defineComponent({
                 }
             }
         };
+
+        /* custom options Merge */
         const options: ChartOptions<'line' | 'bar'> = reactive(props.options);
         options.maintainAspectRatio = options.maintainAspectRatio || initOptions.maintainAspectRatio;
         options.responsive = options.responsive || initOptions.responsive;

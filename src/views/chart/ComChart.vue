@@ -8,7 +8,6 @@
 // import Chart from 'chart.js/auto';
 import {Chart, registerables, ChartData, ChartOptions, ChartType} from 'chart.js';
 import {defineComponent, onMounted, reactive} from 'vue';
-import {isArray} from 'chart.js/helpers';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import {Mode} from 'chartjs-plugin-zoom/types/options';
 import * as utils from '@/views/chart/utils';
@@ -52,7 +51,6 @@ const component = defineComponent({
         /* data 가공 */
         const data: ChartData<ChartType, (number| utils.Point)[], string> = {labels: [], datasets: []};
         const items: Array<(number | utils.Point)[]> = props.data.getItems();
-
         data.datasets = items.map((item, index) => {
             return {
                 label: (props.labelKeys[index] || `dataset ${index}`) as string,
@@ -60,8 +58,10 @@ const component = defineComponent({
             };
         });
 
+        /* x축 Labels */
         data.labels = props.labels as string[];
-        /* options 추가 */
+
+        /* init options */
         const initOptions = {
             maintainAspectRatio: false,
             responsive: true,
@@ -83,6 +83,8 @@ const component = defineComponent({
                 }
             }
         };
+
+        /* Custom Options Merge */
         const options: ChartOptions<ChartType> = reactive(props.options);
         options.maintainAspectRatio = options.maintainAspectRatio || initOptions.maintainAspectRatio;
         options.responsive = options.responsive || initOptions.responsive;
