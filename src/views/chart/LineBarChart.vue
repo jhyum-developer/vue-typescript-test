@@ -132,6 +132,7 @@ const component = defineComponent({
             chart = new Chart(canvas, config);
         });
 
+        /* items 비동기 처리 */
         watch(() => [props.lineData, props.barData], ([lineData, barData]) => {
             data.datasets = [...lineFunction(lineData.getItems()), ...barFunction(barData.getItems())];
             chart.update();
