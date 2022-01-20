@@ -6,11 +6,11 @@
 
 <script lang='ts'>
 import {Dataset} from '@/views/chart/utils';
-import {Chart, ChartData, ChartOptions, registerables} from 'chart.js';
+import {Chart, ChartData, ChartDataset, ChartOptions, registerables} from 'chart.js';
 import * as utils from '@/views/chart/utils';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import {Mode} from 'chartjs-plugin-zoom/types/options';
-import {defineComponent, onMounted, reactive} from 'vue';
+import {defineComponent, onMounted, reactive, watch} from 'vue';
 
 Chart.register(...registerables, zoomPlugin);
 
@@ -52,23 +52,33 @@ const component = defineComponent({
         const lineItems: Array<(number | utils.Point)[]> = props.lineData.getItems();
         const barItems: Array<(number | utils.Point)[]> = props.barData.getItems();
 
+        /* Line Chart data Function */
+        const lineFunction = (items: Array<(number | utils.Point)[]>): ChartDataset<'line' | 'bar', (number | utils.Point)[]>[] => {
+            return items.map((item, index) => {
+                return {
+                    type: 'line' as 'line' | 'bar',
+                    label: (props.labelKeys[index] || `line ${index}`) as string,
+                    data: item
+                };
+            });
+        };
+
+        /* Bar Chart data Function */
+        const barFunction = (items: Array<(number | utils.Point)[]>): ChartDataset<'line' | 'bar', (number | utils.Point)[]>[] => {
+            return items.map((item, index) => {
+                return {
+                    type: 'bar' as 'line' | 'bar',
+                    label: (props.labelKeys[lineItems.length + index] || `bar ${index}`) as string,
+                    data: item
+                };
+            });
+        };
+
         /* Line Chart data 가공 */
-        const lineDatasets = lineItems.map((item, index) => {
-            return {
-                type: 'line' as 'line' | 'bar',
-                label: (props.labelKeys[index] || `line ${index}`) as string,
-                data: item
-            };
-        });
+        const lineDatasets = lineFunction(lineItems);
 
         /* Bar Chart data 가공 */
-        const barDatasets = barItems.map((item, index) => {
-            return {
-                type: 'bar' as 'line' | 'bar',
-                label: (props.labelKeys[lineItems.length + index] || `bar ${index}`) as string,
-                data: item
-            };
-        });
+        const barDatasets = barFunction(barItems);
 
         /* Line - Bar Chart Data Merge */
         data.datasets = [...lineDatasets, ...barDatasets];
@@ -121,6 +131,11 @@ const component = defineComponent({
             if (ctx === null) return;
             chart = new Chart(canvas, config);
         });
+
+        watch(() => [props.lineData, props.barData], ([lineData, barData]) => {
+            data.datasets = [...lineFunction(lineData.getItems()), ...barFunction(barData.getItems())];
+            chart.update();
+        }, {deep: true});
 
         const reset = () => {
             chart.resetZoom();

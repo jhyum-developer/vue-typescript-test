@@ -17,7 +17,7 @@
 export default {
     methods: {
         routerClick() {
-            console.log(this.$router)
+            // console.log(this.$router)
         }
     }
 }

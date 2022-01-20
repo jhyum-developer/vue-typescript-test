@@ -1,4 +1,4 @@
-import {isArray, isNumber, isObject} from 'chart.js/helpers';
+import {isObject} from 'chart.js/helpers';
 
 export type Point = {
     x: string | number;

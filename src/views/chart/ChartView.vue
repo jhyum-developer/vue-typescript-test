@@ -12,14 +12,14 @@
                    :data='data'
                    :labels='xLabels'
                    :label-keys='["test 1", "test 2", "test 3"]'
-                   chart-type='pie'
+                   chart-type='bar'
                    :options='options'>
         </com-chart>
 
         <line-bar-chart ref='lineBarChart'
                         class='sizeClass'
                         :line-data='data'
-                        :bar-data='data'
+                        :bar-data='nData'
                         :labels='xLabels'
                         :label-keys='["test 1", "test 2", "test 3", "test 4", "test 5", "test 6"]'
                         :options='options'>
@@ -29,7 +29,7 @@
 </template>
 
 <script lang='ts'>
-import {defineComponent} from 'vue';
+import {defineComponent, onMounted, reactive, watch} from 'vue';
 import ComChart from './ComChart.vue';
 import {DefineComponent} from '@vue/runtime-core';
 import {ScriptableContext} from 'chart.js';
@@ -50,13 +50,14 @@ export default defineComponent({
             console.log('Change label');
         }
 
-        const items = [
+        const items: Array<number[] | Record<string, unknown>> = [
             {key: 5, key2: 29, key3: 10},
             {key: 10, key2: 9, key3: 8},
             {key: 3, key2: 6, key3: 4},
             {key: 17, key2: 5, key3: 11},
             {key: 7, key2: 14, key3: 23}
         ];
+
         const nItems = [
             [1,2,3,4,5,6,7],
             [11,6,3,14,5,8,2],
@@ -72,7 +73,32 @@ export default defineComponent({
             {x:'key2',y:'key3'}
         ]
 
-        const data = new Dataset(pointKeys, items);
+        const data = reactive(new Dataset(valueKeys, nItems));
+        const nData = reactive(new Dataset(valueKeys, []));
+
+        function itemsPromise() {
+            return new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    return resolve(items);
+                },1000);
+            });
+        }
+
+        async function aysnItems() {
+            try {
+                await itemsPromise().then(result => {
+                    data.items = result as Array<number[] | Record<string, unknown>>;
+                    nData.items = nItems
+                });
+            } catch (error) {
+                console.log(error);
+            }
+
+        }
+
+        onMounted(() => {
+            aysnItems();
+        });
 
         const options = {
             scales: {
@@ -123,22 +149,23 @@ export default defineComponent({
             items,
             xLabels,
             valueKeys,
-            data
+            data,
+            nData
         };
     },
     methods: {
         update() {
-            // const component = this.$refs['com-chart'] as DefineComponent;
-            // component.update();
-            const lineBar = this.$refs['lineBarChart'] as DefineComponent;
-            lineBar.update();
+            const component = this.$refs['com-chart'] as DefineComponent;
+            component.update();
+            // const lineBar = this.$refs['lineBarChart'] as DefineComponent;
+            // lineBar.update();
         },
 
         resetZoom() {
-            // const component = this.$refs['com-chart'] as DefineComponent;
-            // component.resetZoom();
-            const lineBar = this.$refs['lineBarChart'] as DefineComponent;
-            lineBar.resetZoom();
+            const component = this.$refs['com-chart'] as DefineComponent;
+            component.resetZoom();
+            // const lineBar = this.$refs['lineBarChart'] as DefineComponent;
+            // lineBar.resetZoom();
         },
 
         zoom() {

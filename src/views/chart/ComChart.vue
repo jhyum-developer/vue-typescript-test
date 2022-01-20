@@ -6,8 +6,8 @@
 
 <script lang='ts'>
 // import Chart from 'chart.js/auto';
-import {Chart, registerables, ChartData, ChartOptions, ChartType} from 'chart.js';
-import {defineComponent, onMounted, reactive} from 'vue';
+import {Chart, registerables, ChartData, ChartOptions, ChartType, ChartDataset} from 'chart.js';
+import {defineComponent, onMounted, reactive, watch} from 'vue';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import {Mode} from 'chartjs-plugin-zoom/types/options';
 import * as utils from '@/views/chart/utils';
@@ -48,28 +48,36 @@ const component = defineComponent({
     },
 
     setup(props, context) {
+        const test: Array<unknown> = ['123']
+
         /* data 가공 */
         const data: ChartData<ChartType, (number| utils.Point)[], string> = {labels: [], datasets: []};
-        const items: Array<(number | utils.Point)[]> = props.data.getItems();
-        data.datasets = items.map((item, index) => {
-            return {
-                label: (props.labelKeys[index] || `dataset ${index}`) as string,
-                data: item
-            };
-        });
+        const items: Array<(number | utils.Point)[]> = reactive(props.data.getItems());
+
+        const dataFunction = (items: Array<(number | utils.Point)[]>): ChartDataset<ChartType, (number | utils.Point)[]>[] => {
+            return items.map((item, index) => {
+                return {
+                    label: (props.labelKeys[index] || `dataset ${index}`) as string,
+                    data: item
+                };
+            });
+        };
+
+
+        data.datasets = dataFunction(items);
 
         /* x축 Labels */
         data.labels = props.labels as string[];
 
         /* init options */
-        const initOptions = {
+        const initOptions: ChartOptions = {
             maintainAspectRatio: false,
             responsive: true,
             plugins: {
                 zoom: {
                     pan: {
                         enabled: true,
-                        mode: 'xy' as Mode
+                        mode: 'xy'
                     },
                     zoom: {
                         wheel: {
@@ -78,7 +86,7 @@ const component = defineComponent({
                         pinch: {
                             enabled: true
                         },
-                        mode: 'xy' as Mode
+                        mode: 'xy'
                     }
                 }
             }
@@ -106,6 +114,12 @@ const component = defineComponent({
             if (ctx === null) return;
             chart = new Chart(canvas, config);
         });
+
+        /* items 비동기 처리 */
+        watch(() => props.data, (pData) => {
+            data.datasets = dataFunction(pData.getItems());
+            chart.update();
+        }, {deep: true});
 
         const reset = () => {
             chart.resetZoom();
