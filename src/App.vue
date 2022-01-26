@@ -8,6 +8,8 @@
         |
         <router-link to="/breadcrumb">Breadcrumb</router-link>
         |
+        <router-link to="/loadingBar">Loading Bar</router-link>
+        |
         <button @click='routerClick'>router</button>
     </div>
     <router-view/>

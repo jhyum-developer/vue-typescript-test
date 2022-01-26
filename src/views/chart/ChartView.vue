@@ -88,7 +88,7 @@ export default defineComponent({
             try {
                 await itemsPromise().then(result => {
                     data.items = result as Array<number[] | Record<string, unknown>>;
-                    nData.items = nItems
+                    nData.items = nItems;
                 });
             } catch (error) {
                 console.log(error);
@@ -177,8 +177,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.sizeClass {
-    width: 1800px;
-    height: 600px;
-}
+    .sizeClass {
+        width: 1800px;
+        height: 600px;
+    }
 </style>

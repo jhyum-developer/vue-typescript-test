@@ -44,6 +44,12 @@ const routes: Array<RouteRecordRaw> = [
         name: "breadcrumb",
         component: () =>
             import("../views/breadcrumb/Breadcrumb.vue")
+    },
+    {
+        path: "/loadingBar",
+        name: "loadingBar",
+        component: () =>
+            import("../views/loadingbar/LoadingBar.vue")
     }
 ];
 
