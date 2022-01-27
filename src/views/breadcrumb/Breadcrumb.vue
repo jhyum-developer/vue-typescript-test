@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, getCurrentInstance, nextTick, onMounted, onUnmounted, reactive, Ref, ref} from 'vue';
+import {defineComponent, getCurrentInstance, nextTick, onMounted, onUnmounted, reactive, Ref, ref, watch} from 'vue';
 import menu from '@/data/breadcrumb-data.json';
 
 type MenuType = {
@@ -76,6 +76,13 @@ const component = defineComponent({
             }
         };
 
+        const update = (path: MenuType) => {
+            if(instance.value) {
+                menuPath.splice(0, 0, path);
+                instance.value.proxy?.$forceUpdate();
+            }
+        };
+
         const selectMenu = (target: MenuType) => {
             if (instance.value && target.children.length === 0) {
                 instance.value.emit('selectMenu', target);
@@ -109,6 +116,10 @@ const component = defineComponent({
                 window.removeEventListener('mousedown', outsideClick);
             });
 
+        });
+
+        watch(() => props.path, (path) => {
+            update(path as MenuType);
         });
 
         return {
