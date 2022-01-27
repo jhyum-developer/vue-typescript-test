@@ -42,7 +42,7 @@ const component = defineComponent({
     },
 
     setup(props, context) {
-        let instance = getCurrentInstance();
+        let instance = ref(getCurrentInstance());
         const popup = ref();
         const display = ref(false);
         let selectedMenu = ref({
@@ -101,13 +101,12 @@ const component = defineComponent({
             menuPath.push(target);
             close();
 
-            if (instance && target.children.length === 0) {
-                instance.emit('selectMenu', target);
+            if (instance.value && target.children.length === 0) {
+                instance.value.emit('selectMenu', target);
             }
         };
 
         onMounted(() => {
-            instance = getCurrentInstance();
             const outsideClick = (event): void => {
                 if (popup.value) {
                     const isOutsideClick = event.target.parentElement !== popup.value;
