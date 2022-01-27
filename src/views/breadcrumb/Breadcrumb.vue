@@ -15,7 +15,6 @@
 <script lang="ts">
 import {defineComponent, getCurrentInstance, nextTick, onMounted, onUnmounted, reactive, Ref, ref} from 'vue';
 import menu from '@/data/breadcrumb-data.json';
-import router from '@/router';
 
 type MenuType = {
     name: string;
@@ -77,14 +76,14 @@ const component = defineComponent({
             }
         };
 
-        const moveRouter = (target: MenuType) => {
-            router.push({
-                name: target.code
-            });
+        const selectMenu = (target: MenuType) => {
+            if (instance.value && target.children.length === 0) {
+                instance.value.emit('selectMenu', target);
+            }
         };
 
         const viewSubMenu = (event, target, index) => {
-            if (target.children.length === 0) return moveRouter(target);
+            if (target.children.length === 0) return selectMenu(target);
 
             selectedMenu.value = target;
             selectedIndex.value = index;
@@ -95,10 +94,7 @@ const component = defineComponent({
             menuPath.splice(selectedIndex.value + 1);
             menuPath.push(target);
             close();
-
-            if (instance.value && target.children.length === 0) {
-                instance.value.emit('selectMenu', target);
-            }
+            selectMenu(target);
         };
 
         onMounted(() => {
@@ -123,7 +119,6 @@ const component = defineComponent({
             selectedIndex,
             open,
             close,
-            moveRouter,
             viewSubMenu,
             select
         };
