@@ -6,14 +6,14 @@
 
         <div v-if="display" ref="popup" id="popup" class="popup">
             <template v-for="menu in selectedMenu.children" :key="menu.path">
-                <div class="sub-menu" @click="select(menu)">{{ menu.name }}</div>
+                <div class="sub-menu" @click="select($event, menu)">{{ menu.name }}</div>
             </template>
         </div>
     </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, nextTick, onMounted, onUnmounted, reactive, ref} from 'vue';
+import {defineComponent, getCurrentInstance, nextTick, onMounted, onUnmounted, reactive, ref} from 'vue';
 import menu from '../../data/breadcrumb-data.json';
 import router from '@/router';
 
@@ -26,6 +26,8 @@ type MenuType = {
 
 const component = defineComponent({
     name: 'breadcrumb',
+
+    emits: ['selectMenu'],
 
     props: {
         path: {
@@ -40,6 +42,7 @@ const component = defineComponent({
     },
 
     setup(props, context) {
+        let instance = getCurrentInstance();
         const popup = ref();
         const display = ref(false);
         let selectedMenu = ref({
@@ -93,17 +96,18 @@ const component = defineComponent({
             open(event.currentTarget);
         };
 
-        const select = (target: MenuType) => {
+        const select = (event, target: MenuType) => {
             menuPath.splice(selectedIndex.value + 1);
             menuPath.push(target);
             close();
 
-            if (target.children.length === 0) {
-                moveRouter(target);
+            if (instance && target.children.length === 0) {
+                instance.emit('selectMenu', target);
             }
         };
 
         onMounted(() => {
+            instance = getCurrentInstance();
             const outsideClick = (event): void => {
                 if (popup.value) {
                     const isOutsideClick = event.target.parentElement !== popup.value;
