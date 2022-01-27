@@ -1,23 +1,22 @@
 <template>
     <div id="container" class="container">
         <div>Breadcrumb Test</div>
-        <button id="clickButton" @click="move"> Button Click</button>
-        <button @click="close"> Popup Close</button>
         <template v-for="(menu, index) in menuPath" :key="menu.path">
             <div class="menu" @click="displayChildren($event, menu, index)">{{ menu.name }}</div>
         </template>
-    </div>
 
-    <div v-if="display" ref="popup" id="popup" class="popup">
+        <div v-if="display" ref="popup" id="popup" class="popup">
         <template v-for="menu in selectedMenu.children" :key="menu.path">
-            <div class="sub-menu" @mousedown="select(menu)"> {{ menu.name }}</div>
-        </template>
+                <div class="sub-menu" @click="select(menu)">{{ menu.name }}</div>
+            </template>
+        </div>
     </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, onUnmounted, reactive, ref} from 'vue';
+import {defineComponent, nextTick, onMounted, onUnmounted, reactive, ref} from 'vue';
 import menu from '../../data/breadcrumb-data.json';
+import router from '@/router';
 
 type MenuType = {
     name: string;
@@ -44,6 +43,13 @@ const component = defineComponent({
     setup(props, context) {
         const popup = ref();
         const display = ref(false);
+        let selectedMenu = ref({
+            name: '',
+            path: '',
+            code: '',
+            children: []
+        } as MenuType);
+        let selectedIndex = ref(0);
 
         const menuPath: Array<MenuType> = reactive([menu]);
         let sMenu = menu;
@@ -51,13 +57,57 @@ const component = defineComponent({
             menuPath.push(sMenu.children[0]);
             sMenu = sMenu.children[0];
         }
-        let selectedMenu = sMenu;
-        let selectedIndex = 0;
+        selectedMenu.value = sMenu;
+
+        const move = (target: HTMLElement): void => {
+            display.value = true;
+            nextTick(() => {
+                const el = document.querySelector('#popup') as HTMLElement;
+                if (el) {
+                    const rect: DOMRect = target.getBoundingClientRect();
+                    const left = rect.left;
+                    const bottom = rect.bottom;
+
+                    el.style.left = `${left}px`;
+                    el.style.top = `${bottom}px`;
+                }
+            });
+        };
+
+        const close = () => {
+            if (popup.value) {
+                display.value = false;
+            }
+        };
+
+        const moveRouter = (target: MenuType) => {
+            router.push({
+                name: target.code
+            });
+        };
+
+        const displayChildren = (event, target, index) => {
+            if (target.children.length === 0) return moveRouter(target);
+
+            selectedMenu.value = target;
+            selectedIndex.value = index;
+            move(event.currentTarget);
+        };
+
+        const select = (target: MenuType) => {
+            menuPath.splice(selectedIndex.value + 1);
+            menuPath.push(target);
+            close();
+
+            if (target.children.length === 0) {
+                moveRouter(target);
+            }
+        };
 
         onMounted(() => {
             const outsideClick = (event): void => {
                 if (popup.value) {
-                    const isOutsideClick = event.target !== popup.value;
+                    const isOutsideClick = event.target.parentElement !== popup.value;
                     if (isOutsideClick) display.value = false;
                 }
             };
@@ -73,56 +123,13 @@ const component = defineComponent({
             display,
             menuPath,
             selectedMenu,
-            selectedIndex
+            selectedIndex,
+            move,
+            close,
+            moveRouter,
+            displayChildren,
+            select
         };
-    },
-
-    methods: {
-        move(target: HTMLElement): void {
-            this.display = true;
-            this.$nextTick(() => {
-                const el = document.querySelector('#popup') as HTMLElement;
-                if (el) {
-                    const rect: DOMRect = target.getBoundingClientRect();
-                    const left = rect.left;
-                    const bottom = rect.bottom;
-
-                    el.style.left = `${left}px`;
-                    el.style.top = `${bottom}px`;
-                }
-            });
-        },
-
-        close() {
-            if (this.popup) {
-                this.display = false;
-            }
-        },
-
-        moveRouter(target: MenuType) {
-            this.$router.push({
-                name: target.code
-            });
-        },
-
-        displayChildren(event, target, index) {
-            if (target.children.length === 0) return this.moveRouter(target);
-
-            this.selectedMenu = target;
-            this.selectedIndex = index;
-            this.move(event.currentTarget);
-            this.close();
-        },
-
-        select(target: MenuType) {
-            this.menuPath.splice(this.selectedIndex + 1);
-            this.menuPath.push(target);
-            this.close();
-
-            if (target.children.length === 0) {
-                this.moveRouter(target);
-            }
-        }
     }
 });
 
