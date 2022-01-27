@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, getCurrentInstance, nextTick, onMounted, onUnmounted, reactive, ref} from 'vue';
+import {defineComponent, getCurrentInstance, nextTick, onMounted, onUnmounted, reactive, Ref, ref} from 'vue';
 import menu from '../../data/breadcrumb-data.json';
 import router from '@/router';
 
@@ -45,13 +45,8 @@ const component = defineComponent({
         let instance = ref(getCurrentInstance());
         const popup = ref();
         const display = ref(false);
-        let selectedMenu = ref({
-            name: '',
-            path: '',
-            code: '',
-            children: []
-        } as MenuType);
         let selectedIndex = ref(0);
+        let selectedMenu: Ref<MenuType> = ref({} as MenuType);
 
         const menuPath: Array<MenuType> = reactive([menu]);
         let sMenu = menu;
