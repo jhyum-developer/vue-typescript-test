@@ -128,8 +128,6 @@ const component = defineComponent({
             menuPath,
             selectedMenu,
             selectedIndex,
-            open,
-            close,
             viewSubMenu,
             select
         };
