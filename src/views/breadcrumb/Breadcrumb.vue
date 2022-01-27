@@ -1,12 +1,11 @@
 <template>
     <div id="container" class="container">
-        <div>Breadcrumb Test</div>
         <template v-for="(menu, index) in menuPath" :key="menu.path">
             <div class="menu" @click="viewSubMenu($event, menu, index)">{{ menu.name }}</div>
         </template>
 
         <div v-if="display" ref="popup" id="popup" class="popup">
-        <template v-for="menu in selectedMenu.children" :key="menu.path">
+            <template v-for="menu in selectedMenu.children" :key="menu.path">
                 <div class="sub-menu" @click="select(menu)">{{ menu.name }}</div>
             </template>
         </div>
@@ -138,14 +137,15 @@ export default component;
 
 <style scoped>
 .container {
-    width: 1200px;
-    height: 600px;
+    display: inline-block;
+    width: auto;
+    height: auto;
     border: 1px solid black;
+    padding: 5px;
 }
 
 .popup {
     position: absolute;
-    /*display: none;*/
     width: auto;
     height: 100px;
     border: 1px solid red;
@@ -153,14 +153,16 @@ export default component;
 }
 
 .menu {
+    display: inline-block;
     float: left;
-    width: 100px;
-    height: 40px;
+    width: auto;
+    height: auto;
     border: 1px solid black;
-    margin-left: 10px;
+    padding: 5px;
 }
 
 .sub-menu {
+    position: relative;
     width: 100px;
     height: auto;
     border: 1px solid black;
