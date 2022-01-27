@@ -14,7 +14,7 @@
 
 <script lang="ts">
 import {defineComponent, getCurrentInstance, nextTick, onMounted, onUnmounted, reactive, Ref, ref} from 'vue';
-import menu from '../../data/breadcrumb-data.json';
+import menu from '@/data/breadcrumb-data.json';
 import router from '@/router';
 
 type MenuType = {
