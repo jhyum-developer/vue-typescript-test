@@ -2,7 +2,7 @@
     <div id="container" class="container">
         <div>Breadcrumb Test</div>
         <template v-for="(menu, index) in menuPath" :key="menu.path">
-            <div class="menu" @click="displayChildren($event, menu, index)">{{ menu.name }}</div>
+            <div class="menu" @click="viewSubMenu($event, menu, index)">{{ menu.name }}</div>
         </template>
 
         <div v-if="display" ref="popup" id="popup" class="popup">
@@ -59,7 +59,7 @@ const component = defineComponent({
         }
         selectedMenu.value = sMenu;
 
-        const move = (target: HTMLElement): void => {
+        const open = (target: HTMLElement): void => {
             display.value = true;
             nextTick(() => {
                 const el = document.querySelector('#popup') as HTMLElement;
@@ -86,12 +86,12 @@ const component = defineComponent({
             });
         };
 
-        const displayChildren = (event, target, index) => {
+        const viewSubMenu = (event, target, index) => {
             if (target.children.length === 0) return moveRouter(target);
 
             selectedMenu.value = target;
             selectedIndex.value = index;
-            move(event.currentTarget);
+            open(event.currentTarget);
         };
 
         const select = (target: MenuType) => {
@@ -124,10 +124,10 @@ const component = defineComponent({
             menuPath,
             selectedMenu,
             selectedIndex,
-            move,
+            open,
             close,
             moveRouter,
-            displayChildren,
+            viewSubMenu,
             select
         };
     }
