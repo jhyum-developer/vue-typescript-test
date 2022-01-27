@@ -1,29 +1,29 @@
 <template>
-    <button @click='move'> Start Loading Bar</button>
-    <button @click='stop'> End Loading Bar</button>
-    <button @click='open'> Vx Popup Open</button>
+    <button @click="move"> Start Loading Bar</button>
+    <button @click="stop"> End Loading Bar</button>
+    <button @click="open"> Vx Popup Open</button>
 
-<!--    <div class='circle-wrap'>-->
-<!--        <div class='circle'>-->
-<!--            <div class='mask half'>-->
-<!--                <div class='fill'>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class='inside-circle'>-->
-<!--                loading-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
+    <!--    <div class='circle-wrap'>-->
+    <!--        <div class='circle'>-->
+    <!--            <div class='mask half'>-->
+    <!--                <div class='fill'>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            <div class='inside-circle'>-->
+    <!--                loading-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <!--    </div>-->
 
-    <vx-popup ref='popupTest'>
-        <div style='width: 100px;height: 100px'>
+    <vx-popup ref="popupTest">
+        <div style="width: 100px;height: 100px">
             Popup Open
         </div>
     </vx-popup>
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {defineComponent, ref} from 'vue';
 
 const component = defineComponent({
@@ -32,28 +32,28 @@ const component = defineComponent({
     props: {},
 
     setup(props, context) {
-        const move = ():void => {
+        const move = (): void => {
             ;
-        }
-        const stop = ():void => {
+        };
+        const stop = (): void => {
             ;
-        }
+        };
 
-        const test = ref()
+        const test = ref();
 
         const popupTest = ref();
 
         let open = () => {
             popupTest.value.open();
             console.log(popupTest);
-        }
+        };
 
         return {
             move,
             stop,
             popupTest,
             open
-        }
+        };
     },
     methods: {
         // open() {

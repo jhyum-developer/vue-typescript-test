@@ -1,10 +1,10 @@
 <template>
-    <div id='bar-container'>
-        <canvas id='chart'></canvas>
+    <div id="bar-container">
+        <canvas id="chart"></canvas>
     </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 // import Chart from 'chart.js/auto';
 import {Chart, registerables, ChartData, ChartOptions, ChartType, ChartDataset} from 'chart.js';
 import {defineComponent, onMounted, reactive, watch} from 'vue';
@@ -48,10 +48,10 @@ const component = defineComponent({
     },
 
     setup(props, context) {
-        const test: Array<unknown> = ['123']
+        const test: Array<unknown> = ['123'];
 
         /* data 가공 */
-        const data: ChartData<ChartType, (number| utils.Point)[], string> = {labels: [], datasets: []};
+        const data: ChartData<ChartType, (number | utils.Point)[], string> = {labels: [], datasets: []};
         const items: Array<(number | utils.Point)[]> = reactive(props.data.getItems());
 
         const dataFunction = (items: Array<(number | utils.Point)[]>): ChartDataset<ChartType, (number | utils.Point)[]>[] => {

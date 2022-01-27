@@ -1,34 +1,34 @@
 <template>
     <div>
         <h1>Chart Test By Typescript</h1>
-        <button @click='changeData'>data button</button>
-        <button @click='changeLabel'>label button</button>
-        <button @click='update'>update button</button>
-        <button @click='resetZoom'>Reset Zoom</button>
-        <button @click='zoom'>Reset +</button>
-        <com-chart ref='com-chart'
-                   v-if='false'
-                   class='sizeClass'
-                   :data='data'
-                   :labels='xLabels'
+        <button @click="changeData">data button</button>
+        <button @click="changeLabel">label button</button>
+        <button @click="update">update button</button>
+        <button @click="resetZoom">Reset Zoom</button>
+        <button @click="zoom">Reset +</button>
+        <com-chart ref="com-chart"
+                   v-if="false"
+                   class="sizeClass"
+                   :data="data"
+                   :labels="xLabels"
                    :label-keys='["test 1", "test 2", "test 3"]'
-                   chart-type='bar'
-                   :options='options'>
+                   chart-type="bar"
+                   :options="options">
         </com-chart>
 
-        <line-bar-chart ref='lineBarChart'
-                        class='sizeClass'
-                        :line-data='data'
-                        :bar-data='nData'
-                        :labels='xLabels'
+        <line-bar-chart ref="lineBarChart"
+                        class="sizeClass"
+                        :line-data="data"
+                        :bar-data="nData"
+                        :labels="xLabels"
                         :label-keys='["test 1", "test 2", "test 3", "test 4", "test 5", "test 6"]'
-                        :options='options'>
+                        :options="options">
         </line-bar-chart>
     </div>
 
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {defineComponent, onMounted, reactive, watch} from 'vue';
 import ComChart from './ComChart.vue';
 import {DefineComponent} from '@vue/runtime-core';
@@ -59,19 +59,19 @@ export default defineComponent({
         ];
 
         const nItems = [
-            [1,2,3,4,5,6,7],
-            [11,6,3,14,5,8,2],
-            [8,2,23,4,15,6,14]
-        ]
+            [1, 2, 3, 4, 5, 6, 7],
+            [11, 6, 3, 14, 5, 8, 2],
+            [8, 2, 23, 4, 15, 6, 14]
+        ];
 
         const xLabels = ['x label 1', 'x label 2', 'x label 3', 'x label 4', 'x label 5', 'x label 6', 'x label 7'];
 
         const valueKeys = ['key', 'key2', 'key3'];
         const pointKeys = [
-            {x:'key3',y:'key'},
-            {x:'key',y:'key2'},
-            {x:'key2',y:'key3'}
-        ]
+            {x: 'key3', y: 'key'},
+            {x: 'key', y: 'key2'},
+            {x: 'key2', y: 'key3'}
+        ];
 
         const data = reactive(new Dataset(valueKeys, nItems));
         const nData = reactive(new Dataset(valueKeys, []));
@@ -80,7 +80,7 @@ export default defineComponent({
             return new Promise((resolve, reject) => {
                 setTimeout(() => {
                     return resolve(items);
-                },1000);
+                }, 1000);
             });
         }
 
@@ -177,8 +177,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-    .sizeClass {
-        width: 1800px;
-        height: 600px;
-    }
+.sizeClass {
+    width: 1800px;
+    height: 600px;
+}
 </style>

@@ -1,0 +1,57 @@
+{
+  "name": "home",
+  "path": "/",
+  "code":  "App",
+  "children": [
+    {
+      "name": "chart",
+      "path": "/chart",
+      "code":  "ChartView",
+      "children": [
+        {
+          "name": "bar",
+          "path": "/bar",
+          "code":  "ChartView",
+          "children": []
+        },
+        {
+          "name": "line",
+          "path": "/line",
+          "code":  "ChartView",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "breadcrumb",
+      "path": "/breadcrumb",
+      "code":  "Breadcrumb",
+      "children": [
+        {
+          "name": "test1",
+          "path": "/test1",
+          "code":  "",
+          "children": []
+        },
+        {
+          "name": "test2",
+          "path": "/test2",
+          "code":  "",
+          "children": []
+        },
+        {
+          "name": "test3",
+          "path": "/test3",
+          "code":  "",
+          "children": []
+        }
+      ]
+    },
+    {
+      "name": "loading bar",
+      "path": "/loadingBar",
+      "code":  "loadingBar",
+      "children": []
+    }
+  ]
+}

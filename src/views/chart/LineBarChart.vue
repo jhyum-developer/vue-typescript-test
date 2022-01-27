@@ -1,10 +1,10 @@
 <template>
     <div>
-        <canvas id='lineBarChart'></canvas>
+        <canvas id="lineBarChart"></canvas>
     </div>
 </template>
 
-<script lang='ts'>
+<script lang="ts">
 import {Dataset} from '@/views/chart/utils';
 import {Chart, ChartData, ChartDataset, ChartOptions, registerables} from 'chart.js';
 import * as utils from '@/views/chart/utils';
@@ -48,7 +48,7 @@ const component = defineComponent({
 
     setup(props, context) {
         /* data 가공 */
-        const data: ChartData<'line' | 'bar', (number| utils.Point)[], string> = {labels: [], datasets: []};
+        const data: ChartData<'line' | 'bar', (number | utils.Point)[], string> = {labels: [], datasets: []};
         const lineItems: Array<(number | utils.Point)[]> = props.lineData.getItems();
         const barItems: Array<(number | utils.Point)[]> = props.barData.getItems();
 
