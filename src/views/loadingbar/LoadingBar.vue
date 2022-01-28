@@ -3,23 +3,20 @@
     <button @click="stop"> End Loading Bar</button>
     <button @click="open"> Vx Popup Open</button>
 
-    <!--    <div class='circle-wrap'>-->
-    <!--        <div class='circle'>-->
-    <!--            <div class='mask half'>-->
-    <!--                <div class='fill'>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--            <div class='inside-circle'>-->
-    <!--                loading-->
-    <!--            </div>-->
-    <!--        </div>-->
-    <!--    </div>-->
-
-    <vx-popup ref="popupTest">
-        <div style="width: 100px;height: 100px">
-            Popup Open
+    <div class="circle-wrap">
+        <div class="circle">
+            <div class="mask half">
+                <div class="fill">
+                </div>
+            </div>
+            <div class="inside-circle">
+                loading
+            </div>
         </div>
-    </vx-popup>
+    </div>
+
+    <label>File Downloading...</label>
+    <progress max="100" value="30"> 30%</progress>
 
 </template>
 
@@ -54,11 +51,6 @@ const component = defineComponent({
             popupTest,
             open
         };
-    },
-    methods: {
-        // open() {
-        //     this.$refs.popupTest.open();
-        // }
     }
 });
 
