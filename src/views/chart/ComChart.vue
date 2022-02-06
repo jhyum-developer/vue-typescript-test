@@ -9,7 +9,6 @@
 import {Chart, registerables, ChartData, ChartOptions, ChartType, ChartDataset} from 'chart.js';
 import {defineComponent, onMounted, reactive, watch} from 'vue';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import {Mode} from 'chartjs-plugin-zoom/types/options';
 import * as utils from '@/views/chart/utils';
 import {Dataset} from '@/views/chart/utils';
 
