@@ -7,7 +7,7 @@
 <script lang="ts">
 // import Chart from 'chart.js/auto';
 import {Chart, registerables, ChartData, ChartOptions, ChartType, ChartDataset} from 'chart.js';
-import {defineComponent, onMounted, reactive, watch} from 'vue';
+import {defineComponent, onMounted, PropType, reactive, watch} from 'vue';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import * as utils from '@/views/chart/utils';
 import {DataInfo, Dataset, Point} from '@/views/chart/utils';
@@ -29,7 +29,7 @@ const component = defineComponent({
         },
 
         dataInfo: {
-            type: DataInfo || Array,
+            type: Object as PropType<Array<DataInfo>>,
             default: () => new DataInfo()
         },
 
@@ -66,7 +66,7 @@ const component = defineComponent({
         };
 
         // data.datasets = dataFunction(items);
-        data.datasets = reactive(props.dataInfo.getDataset());
+        data.datasets = reactive(props.dataInfo[0].getDataset());
 
         /* x축 Labels */
         // data.labels = props.labels as string[];
@@ -123,7 +123,7 @@ const component = defineComponent({
         /* items 비동기 처리 */
         watch(() => props.data, (pData) => {
             // data.datasets = dataFunction(pData.getItems());
-            data.datasets = reactive(props.dataInfo.getDataset());
+            data.datasets = reactive(props.dataInfo[0].getDataset());
             chart.update();
         }, {deep: true});
 

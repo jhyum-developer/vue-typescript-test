@@ -4,7 +4,7 @@
         <com-chart ref="comChart"
                    class="sizeClass"
                    :data="data"
-                   :data-info="dataInfo"
+                   :data-info="[dataInfo]"
                    :labels="xLabels"
                    :label-keys='labelKeys'
                    chart-type="bar"
