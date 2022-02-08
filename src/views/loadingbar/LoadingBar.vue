@@ -6,12 +6,9 @@
     <div class="circle-wrap">
         <div class="circle">
             <div class="mask half">
-                <div class="fill">
-                </div>
+                <div class="fill"></div>
             </div>
-            <div class="inside-circle">
-                loading
-            </div>
+            <div class="inside-circle">loading</div>
         </div>
     </div>
 
@@ -35,6 +32,10 @@ const component = defineComponent({
         const stop = (): void => {
             ;
         };
+
+        const promise = new Promise(resolve => {
+            resolve('')
+        })
 
         const test = ref();
 

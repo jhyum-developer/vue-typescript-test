@@ -36,6 +36,26 @@ const routes: Array<RouteRecordRaw> = [
     {
         path: "/chart",
         name: "ChartView",
+        children: [
+            {
+                path: "/LineBarChartSample",
+                name: "LineBarChartSample",
+                component: () =>
+                    import("../views/chart/sample/LineBarChartSample.vue")
+            },
+            {
+                path: "/ComChartSample",
+                name: "ComChartSample",
+                component: () =>
+                    import("../views/chart/sample/ComChartSample.vue")
+            },
+            {
+                path: "/PointChartSample",
+                name: "PointChartSample",
+                component: () =>
+                    import("../views/chart/sample/PointChartSample.vue")
+            }
+        ],
         component: () =>
             import("../views/chart/ChartView.vue")
     },

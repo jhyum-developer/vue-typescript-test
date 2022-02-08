@@ -10,7 +10,7 @@ import {Chart, registerables, ChartData, ChartOptions, ChartType, ChartDataset} 
 import {defineComponent, onMounted, reactive, watch} from 'vue';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import * as utils from '@/views/chart/utils';
-import {Dataset} from '@/views/chart/utils';
+import {DataInfo, Dataset, Point} from '@/views/chart/utils';
 
 Chart.register(...registerables, zoomPlugin);
 
@@ -26,6 +26,11 @@ const component = defineComponent({
         data: {
             type: Dataset,
             default: () => new Dataset()
+        },
+
+        dataInfo: {
+            type: DataInfo || Array,
+            default: () => new DataInfo()
         },
 
         labelKeys: {
@@ -47,10 +52,8 @@ const component = defineComponent({
     },
 
     setup(props, context) {
-        const test: Array<unknown> = ['123'];
-
         /* data 가공 */
-        const data: ChartData<ChartType, (number | utils.Point)[], string> = {labels: [], datasets: []};
+        const data: ChartData<ChartType, Record<string, number> | utils.Point[], string> = {labels: [], datasets: []};
         const items: Array<(number | utils.Point)[]> = reactive(props.data.getItems());
 
         const dataFunction = (items: Array<(number | utils.Point)[]>): ChartDataset<ChartType, (number | utils.Point)[]>[] => {
@@ -62,11 +65,11 @@ const component = defineComponent({
             });
         };
 
-
-        data.datasets = dataFunction(items);
+        // data.datasets = dataFunction(items);
+        data.datasets = reactive(props.dataInfo.getDataset());
 
         /* x축 Labels */
-        data.labels = props.labels as string[];
+        // data.labels = props.labels as string[];
 
         /* init options */
         const initOptions: ChartOptions = {
@@ -106,7 +109,10 @@ const component = defineComponent({
 
         /* chart 생성 */
         const canvas = document.createElement('canvas');
-        let chart: Chart<ChartType, unknown[], string> = new Chart(canvas, {type: 'bar', data});
+        let chart: Chart<ChartType, Record<string, number> | utils.Point[], string> = new Chart(canvas, {
+            type: 'bar',
+            data
+        });
         onMounted(() => {
             const canvas = document.getElementById('chart') as HTMLCanvasElement;
             const ctx = canvas.getContext('2d');
@@ -116,7 +122,8 @@ const component = defineComponent({
 
         /* items 비동기 처리 */
         watch(() => props.data, (pData) => {
-            data.datasets = dataFunction(pData.getItems());
+            // data.datasets = dataFunction(pData.getItems());
+            data.datasets = reactive(props.dataInfo.getDataset());
             chart.update();
         }, {deep: true});
 

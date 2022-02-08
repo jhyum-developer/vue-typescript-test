@@ -1,11 +1,13 @@
 <template>
     <div>
         <h1>Chart Test By Typescript</h1>
-        <button @click="changeData">data button</button>
-        <button @click="changeLabel">label button</button>
-        <button @click="update">update button</button>
-        <button @click="resetZoom">Reset Zoom</button>
-        <button @click="zoom">Reset +</button>
+        <button @click="linbar">Line Bar Chart</button>
+        <button @click="comChart">Common Chart</button>
+        <button @click="pointChat">Point Chart</button>
+<!--        <button @click="update">update button</button>-->
+<!--        <button @click="resetZoom">Reset Zoom</button>-->
+<!--        <button @click="zoom">Reset +</button>-->
+        <router-view></router-view>
         <com-chart ref="com-chart"
                    v-if="false"
                    class="sizeClass"
@@ -17,24 +19,34 @@
         </com-chart>
 
         <line-bar-chart ref="lineBarChart"
+                        v-if="false"
                         class="sizeClass"
-                        :line-data="data"
-                        :bar-data="nData"
-                        :labels="xLabels"
-                        :label-keys='["test 1", "test 2", "test 3", "test 4", "test 5", "test 6"]'
-                        :options="options">
+                        :data="data"
+                        :options="options"
+                        zoom>
         </line-bar-chart>
     </div>
 
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, reactive, watch} from 'vue';
+import {defineComponent, onMounted, reactive} from 'vue';
 import ComChart from './ComChart.vue';
 import {DefineComponent} from '@vue/runtime-core';
-import {ScriptableContext} from 'chart.js';
+import {Point, ScriptableContext} from 'chart.js';
 import {Dataset} from '@/views/chart/utils';
 import LineBarChart from '@/views/chart/LineBarChart.vue';
+import router from '@/router';
+
+type func = (...age:any[])=> void;
+
+type test = {
+    type: string;
+    valueKeys: Array<string | Point>;
+    items: Array<number | Record<string, unknown>>;
+    labelKeys:Array<string> | func;
+    stacked: boolean;
+}
 
 export default defineComponent({
     name: 'chart-view',
@@ -42,6 +54,11 @@ export default defineComponent({
     components: {LineBarChart, ComChart},
 
     setup(props, context) {
+
+
+
+
+
         function changeData() {
             console.log('Change Data');
         }
@@ -75,6 +92,7 @@ export default defineComponent({
 
         const data = reactive(new Dataset(valueKeys, nItems));
         const nData = reactive(new Dataset(valueKeys, []));
+        const test = new Dataset();
 
         function itemsPromise() {
             return new Promise((resolve, reject) => {
@@ -154,6 +172,18 @@ export default defineComponent({
         };
     },
     methods: {
+        linbar() {
+            router.push({name:'LineBarChartSample'})
+        },
+
+        comChart() {
+            router.push({name:'ComChartSample'})
+        },
+
+        pointChat() {
+            router.push({name:'PointChartSample'})
+        },
+
         update() {
             const component = this.$refs['com-chart'] as DefineComponent;
             component.update();
