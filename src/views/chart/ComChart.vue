@@ -6,13 +6,7 @@
 
 <script lang="ts">
 // import Chart from 'chart.js/auto';
-import {
-    Chart,
-    registerables,
-    ChartData,
-    ChartOptions,
-    ChartType,
-} from 'chart.js';
+import {Chart, registerables, ChartData, ChartOptions, ChartType} from 'chart.js';
 import {defineComponent, onMounted, PropType, reactive, UnwrapRef, watch} from 'vue';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import * as utils from '@/views/chart/utils';
@@ -62,11 +56,10 @@ const component = defineComponent({
                     if(!labels.includes(label)) labels.push(label)
                 });
             });
-
             data.labels = labels;
         };
-
         setData(dataList, data);
+
         /* init options */
         const initOptions: ChartOptions = {
             maintainAspectRatio: false,
@@ -103,12 +96,14 @@ const component = defineComponent({
             options
         };
 
-        /* chart 생성 */
+        /* 외부 인터페이스를 위한 Chart Instance 생성 */
         const canvas = document.createElement('canvas');
         let chart: Chart<ChartType, utils.DataType, string> = new Chart(canvas, {
             type: 'bar',
             data
         });
+
+        /* Chart Instance 갱신 */
         onMounted(() => {
             const canvas = document.getElementById('chart') as HTMLCanvasElement;
             const ctx = canvas.getContext('2d');
@@ -116,16 +111,18 @@ const component = defineComponent({
             chart = new Chart(canvas, config);
         });
 
-        /* items 비동기 처리 */
+        /* items 비동기 처리 및 Chart 갱신 */
         watch(() => dataList, (pData) => {
             setData(dataList, data);
             chart.update();
         }, {deep: true});
 
+        /* Zoom Reset */
         const reset = () => {
             chart.resetZoom();
         };
 
+        /* Chart 갱신 */
         const chartUpdate = () => {
             chart.update();
         };
