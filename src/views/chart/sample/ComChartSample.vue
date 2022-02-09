@@ -3,8 +3,7 @@
         <button @click="zoomReset">Zoom Reset</button>
         <com-chart ref="comChart"
                    class="sizeClass"
-                   :data="data"
-                   :data-info="[dataInfo]"
+                   :data-info="dataInfo"
                    :labels="xLabels"
                    :label-keys='labelKeys'
                    chart-type="bar"
@@ -16,7 +15,7 @@
 <script lang="ts">
 import {defineComponent, reactive, ref} from 'vue';
 import ComChart from '@/views/chart/ComChart.vue';
-import {DataInfo, Dataset} from '@/views/chart/utils';
+import {DataInfo} from '@/views/chart/utils';
 import jsonData from '@/data/chart-data.json';
 import {ScriptableContext} from 'chart.js';
 
@@ -28,21 +27,15 @@ const component = defineComponent({
     setup(props, context) {
         const comChart = ref();
         const xLabels = ['apple', 'banana', 'orange', 'pc', 'red', 'yellow', 'good'];
-        const valueKeys = ['key', 'key2', 'key3'];
+        const valueKeys = ['key', 'key2'];
         const labelKeys = ["com 1", "com 2", "com 3"];
-        const data = reactive(new Dataset(valueKeys, jsonData.objItems));
-        const dataInfo = reactive(new DataInfo('bar', 'label', valueKeys, jsonData.objItems));
+        const dataInfo =reactive([
+            new DataInfo('bar', 'label', valueKeys, jsonData.objItems,true),
+            new DataInfo('line', 'label', ['key3'], jsonData.objItems)
+        ])
 
 
         const options = {
-            // scales: {
-            //     x: {
-            //         stacked: true
-            //     },
-            //     y: {
-            //         stacked: true
-            //     }
-            // },
             backgroundColor: function(context: ScriptableContext<any>) {
                 const dataIndex = context.dataIndex;
                 const index = dataIndex % 6;
@@ -79,7 +72,6 @@ const component = defineComponent({
         return {
             xLabels,
             labelKeys,
-            data,
             dataInfo,
             options,
             comChart

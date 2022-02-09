@@ -7,10 +7,10 @@
 <script lang="ts">
 // import Chart from 'chart.js/auto';
 import {Chart, registerables, ChartData, ChartOptions, ChartType, ChartDataset} from 'chart.js';
-import {defineComponent, onMounted, PropType, reactive, watch} from 'vue';
+import {defineComponent, onMounted, PropType, reactive, UnwrapRef, watch} from 'vue';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import * as utils from '@/views/chart/utils';
-import {DataInfo, Dataset, Point} from '@/views/chart/utils';
+import {DataInfo} from '@/views/chart/utils';
 
 Chart.register(...registerables, zoomPlugin);
 
@@ -23,14 +23,9 @@ const component = defineComponent({
             default: () => ['label1', 'label2', 'label3', 'label4', 'label5', 'label6', 'label7']
         },
 
-        data: {
-            type: Dataset,
-            default: () => new Dataset()
-        },
-
         dataInfo: {
-            type: Object as PropType<Array<DataInfo>>,
-            default: () => new DataInfo()
+            type: Array as PropType<UnwrapRef<Array<DataInfo>>>,
+            default: () => [new DataInfo()]
         },
 
         labelKeys: {
@@ -54,22 +49,11 @@ const component = defineComponent({
     setup(props, context) {
         /* data 가공 */
         const data: ChartData<ChartType, Record<string, number> | utils.Point[], string> = {labels: [], datasets: []};
-        const items: Array<(number | utils.Point)[]> = reactive(props.data.getItems());
+        const dataList:Array<DataInfo> = reactive(props.dataInfo) as Array<DataInfo>;
 
-        const dataFunction = (items: Array<(number | utils.Point)[]>): ChartDataset<ChartType, (number | utils.Point)[]>[] => {
-            return items.map((item, index) => {
-                return {
-                    label: (props.labelKeys[index] || `dataset ${index}`) as string,
-                    data: item
-                };
-            });
-        };
-
-        // data.datasets = dataFunction(items);
-        data.datasets = reactive(props.dataInfo[0].getDataset());
-
-        /* x축 Labels */
-        // data.labels = props.labels as string[];
+        dataList.forEach(dataInfo => {
+            data.datasets.push(...dataInfo.getDataset());
+        });
 
         /* init options */
         const initOptions: ChartOptions = {
@@ -121,9 +105,10 @@ const component = defineComponent({
         });
 
         /* items 비동기 처리 */
-        watch(() => props.data, (pData) => {
-            // data.datasets = dataFunction(pData.getItems());
-            data.datasets = reactive(props.dataInfo[0].getDataset());
+        watch(() => dataList, (pData) => {
+            dataList.forEach(dataInfo => {
+                data.datasets.push(...dataInfo.getDataset());
+            });
             chart.update();
         }, {deep: true});
 

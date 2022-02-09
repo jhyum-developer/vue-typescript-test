@@ -38,12 +38,6 @@ const routes: Array<RouteRecordRaw> = [
         name: "ChartView",
         children: [
             {
-                path: "/LineBarChartSample",
-                name: "LineBarChartSample",
-                component: () =>
-                    import("../views/chart/sample/LineBarChartSample.vue")
-            },
-            {
                 path: "/ComChartSample",
                 name: "ComChartSample",
                 component: () =>

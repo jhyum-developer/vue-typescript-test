@@ -3,7 +3,6 @@
         <button @click="zoomReset">Zoom Reset</button>
         <com-chart ref="pointChart"
                    class="sizeClass"
-                   :data="data"
                    :data-info="dataInfo"
                    :label-keys='labelKeys'
                    chart-type="scatter"
@@ -15,7 +14,7 @@
 <script lang="ts">
 import {defineComponent, reactive, ref} from 'vue';
 import ComChart from '@/views/chart/ComChart.vue';
-import {DataInfo, Dataset} from '@/views/chart/utils';
+import {DataInfo} from '@/views/chart/utils';
 import jsonData from '@/data/chart-data.json';
 import {ScriptableContext} from 'chart.js';
 
@@ -32,8 +31,7 @@ const component = defineComponent({
             {x: 'key2', y: 'key3'}
         ];
         const labelKeys = ["com 1", "com 2", "com 3"];
-        const data = reactive(new Dataset(pointKeys, jsonData.objItems));
-        const dataInfo = new DataInfo('scatter', 'label', pointKeys, jsonData.objItems, true)
+        const dataInfo = reactive([new DataInfo('scatter', 'label', pointKeys, jsonData.objItems, true)])
 
         const options = {
             backgroundColor: function(context: ScriptableContext<any>) {
@@ -71,7 +69,6 @@ const component = defineComponent({
 
         return {
             labelKeys,
-            data,
             dataInfo,
             options,
             pointChart
