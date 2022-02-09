@@ -35,13 +35,15 @@ const component = defineComponent({
                 labelKey: 'label',
                 valueKeys: valueKeys,
                 items: jsonData.objItems,
+                // items: jsonData.arrayItems,
                 stacked: true
             },
             {
                 type:'bar',
                 labelKey: 'label2',
-                valueKeys: ['key'],
-                items: jsonData.objItems,
+                valueKeys: ['key', 'key2'],
+                // items: jsonData.objItems,
+                items: jsonData.arrayItems,
                 stacked: false
             }
         ]

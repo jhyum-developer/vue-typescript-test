@@ -14,7 +14,7 @@
 <script lang="ts">
 import {defineComponent, reactive, ref} from 'vue';
 import ComChart from '@/views/chart/ComChart.vue';
-import {DataInfo} from '@/views/chart/utils';
+import {DataInfo, Dataset} from '@/views/chart/utils';
 import jsonData from '@/data/chart-data.json';
 import {ScriptableContext} from 'chart.js';
 
@@ -31,7 +31,15 @@ const component = defineComponent({
             {x: 'key2', y: 'key3'}
         ];
         const labelKeys = ["com 1", "com 2", "com 3"];
-        const dataInfo = reactive([new DataInfo('scatter', 'label', pointKeys, jsonData.objItems, true)])
+        const dataInfo: Array<Dataset> = [
+            {
+                type:'scatter',
+                labelKey: 'label',
+                valueKeys: pointKeys,
+                items: jsonData.objItems,
+                stacked: true
+            }
+        ]
 
         const options = {
             backgroundColor: function(context: ScriptableContext<any>) {
