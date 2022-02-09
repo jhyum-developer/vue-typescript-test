@@ -7,7 +7,17 @@ export type Point = {
     r?: string | number;
 };
 
+export type DataType = Record<string, number | number[]> | Point[];
+
 type Func = (...age: any[]) => string;
+
+export type Dataset = {
+    type: ChartType;
+    labelKey: string | Func;
+    valueKeys: Array<string | Point>;
+    items: Array<number[] | Record<string, unknown>>;
+    stacked: boolean;
+}
 
 export class DataInfo {
     type: ChartType;
@@ -15,7 +25,7 @@ export class DataInfo {
     valueKeys: Array<string | Point>;
     items: Array<number[] | Record<string, unknown>>;
     stacked: boolean;
-    private readonly dataset: ChartDataset<ChartType, Record<string, number> | Point[]>[];
+    private readonly dataset: ChartDataset<ChartType, DataType>[];
     private static STACK = 0;
 
     constructor(type?: ChartType, labelKey?: string | Func, valueKeys?: Array<string | Point>, items?: Array<number[] | Record<string, unknown>>, stacked?: boolean) {
@@ -40,7 +50,7 @@ export class DataInfo {
         return item[key] as string;
     }
 
-    getDataArray(): Array<Record<string, number> | Point[]> {
+    getDataArray(): Array<DataType> {
         if (Array.isArray(this.items[0])) {
             return this.items.map(item => {
                 const target = item as number[];
@@ -53,9 +63,9 @@ export class DataInfo {
             });
         }
 
-        const results: Array<Record<string, number> | Point[]> = [];
+        const results: Array<DataType> = [];
         this.valueKeys.forEach((key, keyIndex) => {
-            const data: Record<string, number> = {};
+            const data: Record<string, number | number[]> = {};
 
             if (isObject(key)) {
                 results[keyIndex] = this.items.map(item => {
@@ -71,7 +81,7 @@ export class DataInfo {
             } else {
                 this.items.forEach(item => {
                     const label = this.getLabel(this.labelKey, item);
-                    data[label] = item[key] as number;
+                    data[label] = item[key] as number | number[];
                 });
 
                 results[keyIndex] = data;
@@ -94,7 +104,11 @@ export class DataInfo {
         });
     }
 
-    getDataset(): ChartDataset<ChartType, Record<string, number> | Point[]>[] {
+    getDataset(): ChartDataset<ChartType, DataType>[] {
         return this.dataset;
+    }
+
+    getLabels() {
+        return this.items.map(item => this.getLabel(this.labelKey, item));
     }
 }

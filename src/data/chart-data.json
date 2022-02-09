@@ -1,10 +1,10 @@
 {
   "objItems": [
-    {"label": "apple","key": 5, "key2": 29, "key3": 10},
-    {"label": "banana","key": 10, "key2": 9, "key3": 8},
-    {"label": "red","key": 3, "key2": 6, "key3": 4},
-    {"label": "black","key": 17, "key2": 5, "key3": 11},
-    {"label": "hahahaha","key": 7, "key2": 14, "key3": 23}
+    {"label2":"apple","label": "apple","key": [0, 10], "key2": 29, "key3": 10},
+    {"label2":"banana","label": "banana","key": [-2, 10], "key2": 9, "key3": 8},
+    {"label2":"red","label": "red","key": [-3, 3], "key2": 6, "key3": 4},
+    {"label2":"hohohoho","label": "black","key": [2, 19], "key2": 5, "key3": 11},
+    {"label2":"kikiki","label": "hahahaha","key": [-10, -3], "key2": 14, "key3": 23}
   ],
   "numItems": [
     [1, 2, 3, 4, 5, 6, 7],

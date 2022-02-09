@@ -4,10 +4,9 @@
         <com-chart ref="comChart"
                    class="sizeClass"
                    :data-info="dataInfo"
-                   :labels="xLabels"
-                   :label-keys='labelKeys'
                    chart-type="bar"
-                   :options="options">
+                   :options="options"
+                   zoom>
         </com-chart>
     </div>
 </template>
@@ -15,7 +14,7 @@
 <script lang="ts">
 import {defineComponent, reactive, ref} from 'vue';
 import ComChart from '@/views/chart/ComChart.vue';
-import {DataInfo} from '@/views/chart/utils';
+import {Dataset} from '@/views/chart/utils';
 import jsonData from '@/data/chart-data.json';
 import {ScriptableContext} from 'chart.js';
 
@@ -27,15 +26,32 @@ const component = defineComponent({
     setup(props, context) {
         const comChart = ref();
         const xLabels = ['apple', 'banana', 'orange', 'pc', 'red', 'yellow', 'good'];
-        const valueKeys = ['key', 'key2'];
+        const valueKeys = ['key2', 'key3'];
         const labelKeys = ["com 1", "com 2", "com 3"];
-        const dataInfo =reactive([
-            new DataInfo('bar', 'label', valueKeys, jsonData.objItems,true),
-            new DataInfo('line', 'label', ['key3'], jsonData.objItems)
-        ])
 
+        const dataInfo: Array<Dataset> = [
+            {
+                type:'bar',
+                labelKey: 'label',
+                valueKeys: valueKeys,
+                items: jsonData.objItems,
+                stacked: true
+            },
+            {
+                type:'bar',
+                labelKey: 'label2',
+                valueKeys: ['key'],
+                items: jsonData.objItems,
+                stacked: false
+            }
+        ]
 
         const options = {
+            // indexAxis: 'y',
+            // datasets: function(context: ScriptableContext<any>) {
+            //     const chart = context.chart;
+            //     console.log(chart)
+            // },
             backgroundColor: function(context: ScriptableContext<any>) {
                 const dataIndex = context.dataIndex;
                 const index = dataIndex % 6;
