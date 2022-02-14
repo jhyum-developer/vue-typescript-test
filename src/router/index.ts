@@ -64,6 +64,12 @@ const routes: Array<RouteRecordRaw> = [
         name: "loadingBar",
         component: () =>
             import("../views/loadingbar/LoadingBar.vue")
+    },
+    {
+        path: "/virtualScroll",
+        name: "VirtualScroll",
+        component: () =>
+            import("../views/scroll/VirtualScroll.vue")
     }
 ];
 

@@ -10,6 +10,8 @@
         |
         <router-link to="/loadingBar">Loading Bar</router-link>
         |
+        <router-link to="/virtualScroll">Virtual Scroll</router-link>
+        |
         <button @click='routerClick'>router</button>
     </div>
     <router-view/>
