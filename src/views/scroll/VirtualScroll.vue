@@ -57,8 +57,8 @@ const component = defineComponent({
         onScroll() {
             const scrollContainer = this.$refs.scrollContainer as HTMLElement;
             const scrollTop = scrollContainer.scrollTop;
-            this.startIndex = Math.round(scrollTop/30);
-            this.offsetY = scrollTop;
+            this.startIndex = scrollTop > 64? Math.round((scrollTop - 64)/32) : 0;
+            this.offsetY = scrollTop > 64? this.startIndex * 32: 0;
             this.tempScrollTop = scrollTop;
 
         }
@@ -80,6 +80,7 @@ export default component;
     border: 1px solid black;
 }
 .content-container {
-    height: 320px;
+    display: inline-block;
+    height: auto;
 }
 </style>
