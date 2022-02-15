@@ -20,9 +20,8 @@ const component = defineComponent({
 
     data() {
         return {
-            offsetY: 0,
-            tempScrollTop: 0,
-        }
+            offsetY: 0
+        };
     },
 
     setup(props, context) {
@@ -31,11 +30,13 @@ const component = defineComponent({
             dummy.push({label:`item index ${i}`})
         }
 
+        const paddingIndex = 2;
+        const contentSize = 10;
         let startIndex = ref(0);
-        let deltaIndex = ref(0);
+        const endIndex = computed(() => startIndex.value + 2 * paddingIndex + contentSize);
         const displayList = computed({
             get: () => {
-                return dummy.slice(startIndex.value, startIndex.value + 14);
+                return dummy.slice(startIndex.value, endIndex.value);
             },
             set: () => {;}
         });
@@ -48,19 +49,24 @@ const component = defineComponent({
         return {
             displayList,
             virtualContent,
-            startIndex,
-            deltaIndex
+            startIndex
         };
     },
 
     methods: {
         onScroll() {
+            const paddingIndex = 2;
+            // content Height(30px) + 2 * border(1px, top & bottom)
+            const contentHeight = 32;
+            const paddingScrollTop = paddingIndex * contentHeight;
+            // scroll container Element => viewPort Element
             const scrollContainer = this.$refs.scrollContainer as HTMLElement;
+            // scroll container scrollTop => viewPort Element Scroll Top
             const scrollTop = scrollContainer.scrollTop;
-            this.startIndex = scrollTop > 64? Math.round((scrollTop - 64)/32) : 0;
-            this.offsetY = scrollTop > 64? this.startIndex * 32: 0;
-            this.tempScrollTop = scrollTop;
-
+            this.startIndex = scrollTop > paddingScrollTop?
+                Math.round((scrollTop - paddingScrollTop)/contentHeight) : 0;
+            // 시작 index 가 padding index 보다 클 경우 시작 index 만큼 offset
+            this.offsetY = scrollTop > paddingScrollTop? this.startIndex * 32: 0;
         }
     }
 });
