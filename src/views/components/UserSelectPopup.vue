@@ -1,6 +1,6 @@
 <template>
     <div>
-        <vx-popup></vx-popup>
+
     </div>
 </template>
 

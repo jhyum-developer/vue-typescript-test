@@ -70,6 +70,18 @@ const routes: Array<RouteRecordRaw> = [
         name: "VirtualScroll",
         component: () =>
             import("../views/scroll/VirtualScroll.vue")
+    },
+    {
+        path: "/dragdrop",
+        name: "DragDrop",
+        component: () =>
+            import("../views/dragdrop/DragDrop.vue")
+    },
+    {
+        path: "/userSelectPopup",
+        name: "UserSelectPopup",
+        component: () =>
+            import("../views/components/UserSelectPopup.vue")
     }
 ];
 

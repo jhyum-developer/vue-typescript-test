@@ -12,6 +12,10 @@
         |
         <router-link to="/virtualScroll">Virtual Scroll</router-link>
         |
+        <router-link to="/dragdrop">Drag Drop</router-link>
+        |
+        <router-link to="/userSelectPopup">User Select Popup</router-link>
+        |
         <button @click='routerClick'>router</button>
     </div>
     <router-view/>
